@@ -1,5 +1,6 @@
 const express = require('express');
 const store = require('../store');
+const { requireTitle } = require('../middleware/validate');
 
 const router = express.Router();
 
@@ -16,11 +17,8 @@ router.get('/:id', (req, res) => {
   res.json(todo);
 });
 
-router.post('/', (req, res) => {
+router.post('/', requireTitle, (req, res) => {
   const { title, completed } = req.body;
-  if (!title) {
-    return res.status(400).json({ error: 'title is required' });
-  }
   const todo = store.create({ title, completed });
   res.status(201).json(todo);
 });
